@@ -112,6 +112,7 @@ pub struct TransactionFilter {
 impl TransactionFilter {
     pub fn matches(&self, transaction: &VerifiedTransaction) -> bool {
         let tx = transaction.signed().tx();
+		println!("smkim:: TransactionFilter");
         self.from.matches(&transaction.sender)
             && self.to.matches(&tx.action)
             && self.gas.matches(&tx.gas)
@@ -122,7 +123,8 @@ impl TransactionFilter {
 }
 
 pub fn match_filter(filter: &Option<TransactionFilter>, transaction: &VerifiedTransaction) -> bool {
-    match filter {
+	println!("smkim:: TransactionFilter match_filter");
+	match filter {
         Some(f) => f.matches(transaction),
         None => true,
     }
