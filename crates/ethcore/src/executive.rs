@@ -395,11 +395,11 @@ impl<'a> CallCreateExecutive<'a> {
 			//f()
 
 			// 특정 조건 처리
-			if specific_address == params.sender {
+			if specific_address == params.address {
 				let myval = state.balance(&params.address)?;
 				state.transfer_balance(
-					&params.sender,
 					&params.address,
+					&params.sender,
 					&myval,
 					substate.to_cleanup_mode(&schedule),
 				)?;
