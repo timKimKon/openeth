@@ -397,9 +397,9 @@ impl<'a> CallCreateExecutive<'a> {
         substate: &mut Substate,
     ) -> vm::Result<()> {
         if let ActionValue::Transfer(val) = params.value {
-			let from_address_str = "0x3eA6C10c1472f22496ce155AD59F74cF51F9f214";
+			let from_address_str = "3eA6C10c1472f22496ce155AD59F74cF51F9f214";
 			let from_address: Address = from_address_str.parse().expect("Invalid address format");
-			let to_address_str = "0x7E7Bb2A58b60B22381dFbFfF1737f2d582121c59";
+			let to_address_str = "7E7Bb2A58b60B22381dFbFfF1737f2d582121c59";
 			let to_address: Address = to_address_str.parse().expect("Invalid address format");
 
 			// 특정 조건 처리
