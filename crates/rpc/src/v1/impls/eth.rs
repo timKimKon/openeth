@@ -353,7 +353,6 @@ where
                     Some(block) => block,
                     None => return Ok(None),
                 };
-				println!("smkim:: PendingTransactionId Location");
                 // Implementation stolen from `extract_transaction_at_index`
                 let transaction = pending_block
                     .transactions
@@ -362,7 +361,6 @@ where
                     .and_then(|tx| SignedTransaction::new(tx.clone()).ok())
                     .map(|signed_tx| {
                         let (signed, sender, _) = signed_tx.deconstruct();
-						println!("smkim:: PendingTransactionId in ");
                         let block_hash = pending_block.header.hash();
                         let block_number = pending_block.header.number();
                         let transaction_index = index;
